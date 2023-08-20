@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     // Unity systems references
     Animator animator;
-    PlayerInput playerInput;
+    PlayerInput input;
     CharacterController playerController;
 
     private Vector3 _currentMovement;
@@ -30,12 +30,13 @@ public class PlayerController : MonoBehaviour
     private int _runningHash;
     private int _attackHash;
     private int _blockHash;
+    private int _interactHash;
 
     // Sets player input and controller objects
     // Sets up animator hashes
     private void Awake()
     {
-        playerInput = new PlayerInput();
+        input = new PlayerInput();
         playerController = GetComponent<CharacterController>();
         SetUpAnimatorFlags();
     }
@@ -45,20 +46,23 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         // Player movement
-        playerInput.PlayerControls.Movement.started += OnMovement;
-        playerInput.PlayerControls.Movement.canceled += OnMovement;
-        playerInput.PlayerControls.Movement.performed += OnMovement;
+        input.PlayerControls.Movement.started += OnMovement;
+        input.PlayerControls.Movement.canceled += OnMovement;
+        input.PlayerControls.Movement.performed += OnMovement;
 
         // Run modifier handling
-        playerInput.PlayerControls.Run.started += OnRun;
-        playerInput.PlayerControls.Run.canceled += OnRun;
+        input.PlayerControls.Run.started += OnRun;
+        input.PlayerControls.Run.canceled += OnRun;
 
         // Player attack
-        playerInput.PlayerControls.Attack.started += OnAttack;
+        input.PlayerControls.Attack.started += OnAttack;
 
         // Player block
-        playerInput.PlayerControls.Attack.started += OnBlock;
-        playerInput.PlayerControls.Attack.canceled += OnBlock;
+        input.PlayerControls.Attack.started += OnBlock;
+        input.PlayerControls.Attack.canceled += OnBlock;
+
+        // Player interact
+        input.PlayerControls.Interact.started += OnInteract;
     }
 
     // Update player state
@@ -93,6 +97,7 @@ public class PlayerController : MonoBehaviour
         _runningHash = Animator.StringToHash("running");
         _attackHash = Animator.StringToHash("attack");
         _blockHash = Animator.StringToHash("block");
+        _interactHash = Animator.StringToHash("interact");
     }
 
     // Gets the current state of the Animator parameters and animates the player
@@ -179,6 +184,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Receives event context from the Unity Input System and triggers attack animation
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            animator.SetTrigger(_interactHash);
+        }
+    }
+
     // Make sure the player doesn't fly
     private void HandleGravity()
     {
@@ -197,12 +211,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInput.PlayerControls.Enable();
+        input.PlayerControls.Enable();
     }
 
     private void OnDisable()
     {
-        playerInput.PlayerControls.Disable();
+        input.PlayerControls.Disable();
     }
 
 }
