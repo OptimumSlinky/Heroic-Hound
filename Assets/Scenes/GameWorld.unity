@@ -553,6 +553,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 57f53ccf-d099-4d96-ae8a-8cc7fa8add41
     m_ActionName: PlayerControls/Run[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1560746938}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6b275100-0426-492f-ba27-4f3a019abe05
+    m_ActionName: PlayerControls/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1560746938}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnBlock
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1a70a66b-23d3-422f-90bd-5f3d98f20fd8
+    m_ActionName: PlayerControls/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerControls
@@ -570,6 +602,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147b95338b2d8f64faa5367597b963ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _walkMultiplier: 2
+  _runMultiplier: 6
+  _rotationMultiplier: 6
 --- !u!143 &1560746939
 CharacterController:
   m_ObjectHideFlags: 0
