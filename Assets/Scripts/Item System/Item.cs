@@ -4,7 +4,6 @@ public class Item : Interactable
 {
     protected override void Interact()
     {
-        base.Interact();
         PickUpItem();
     }
 

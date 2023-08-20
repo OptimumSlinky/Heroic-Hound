@@ -8,7 +8,6 @@ public class Inventory : MonoBehaviour
     private int _capacity = 4;
     [SerializeField] private List<Item> _inventory = new List<Item>();
 
-
     private void Awake()
     {
         instance = this;
