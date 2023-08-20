@@ -30,7 +30,6 @@ public class PlayerController : MonoBehaviour
     private int _runningHash;
     private int _attackHash;
     private int _blockHash;
-    private int _interactHash;
 
     // Sets player input and controller objects
     // Sets up animator hashes
@@ -97,7 +96,6 @@ public class PlayerController : MonoBehaviour
         _runningHash = Animator.StringToHash("running");
         _attackHash = Animator.StringToHash("attack");
         _blockHash = Animator.StringToHash("block");
-        _interactHash = Animator.StringToHash("interact");
     }
 
     // Gets the current state of the Animator parameters and animates the player
@@ -189,7 +187,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            animator.SetTrigger(_interactHash);
+            // Interaction logic here
         }
     }
 
