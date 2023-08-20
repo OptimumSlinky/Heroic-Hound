@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Basic camera that follows the player character
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform _player;
@@ -7,11 +8,13 @@ public class CameraController : MonoBehaviour
     private Vector3 _offset;
     private Vector3 _currentVelocity = Vector3.zero;
 
+    // Set initial offset
     void Awake()
     {
         _offset = transform.position - _player.position;
     }
 
+    // Update camera transform based on player position
     void LateUpdate()
     {
         Vector3 cameraTarget = _player.position + _offset;

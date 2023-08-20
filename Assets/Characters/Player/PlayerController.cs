@@ -18,10 +18,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _runMultiplier = 3.0f;
     [SerializeField] private float _rotationMultiplier = 5.0f;
 
+    // Bools for tracking current player state
     private bool _isPlayerMoving;
     private bool _isPlayerRunning;
     private bool _isPlayerBlocking;
 
+    // Integers for animator hashing
     private int _walkingHash;
     private int _runningHash;
     private int _attackHash;
@@ -51,7 +53,6 @@ public class PlayerController : MonoBehaviour
 
         // Player attack
         playerInput.PlayerControls.Attack.started += OnAttack;
-        playerInput.PlayerControls.Attack.canceled += OnAttack;
 
         // Player block
         playerInput.PlayerControls.Attack.started += OnBlock;
