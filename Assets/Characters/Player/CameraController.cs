@@ -1,33 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform player;
-    public Camera mainCamera;
+    [SerializeField] private Transform _player;
+    [SerializeField] private float _smoothTime = 0.25f;
+    private Vector3 _offset;
+    private Vector3 _currentVelocity = Vector3.zero;
 
-    public Vector3 cameraOffset;
-
-    // Zoom variables
-    public float currentZoom = 1.5f;
-    public float zoomSpeed = 0.5f;
-    public float minZoom = 0.5f;
-    public float maxZoom = 3f;
-
-    // Camera rotation
-    public float turnSpeed = 100f;
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        mainCamera = Camera.main;
+        _offset = transform.position - _player.position;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void LateUpdate()
     {
-        mainCamera.transform.position = player.position + cameraOffset * currentZoom;
-        mainCamera.transform.LookAt(player.position);
+        Vector3 cameraTarget = _player.position + _offset;
+        transform.position = Vector3.SmoothDamp(transform.position, cameraTarget, ref _currentVelocity, _smoothTime);
     }
 }
