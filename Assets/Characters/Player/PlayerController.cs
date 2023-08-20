@@ -62,9 +62,18 @@ public class PlayerController : MonoBehaviour
     // Update player state
     void Update()
     {
-        playerController.Move(_currentMovement * Time.deltaTime);
         OnRotate();
         AnimatePlayer();
+
+        if (_isPlayerRunning)
+        {
+            playerController.Move((_currentMovement * _runMultiplier) * Time.deltaTime);
+        }
+
+        else
+        {
+            playerController.Move((_currentMovement * _walkMultiplier) * Time.deltaTime);
+        }
     }
 
     // Sets up hashes for animator optimization
@@ -108,7 +117,7 @@ public class PlayerController : MonoBehaviour
     public void OnMovement(InputAction.CallbackContext value)
     {
         _inputMovement = value.ReadValue<Vector2>();
-        _currentMovement = new Vector3(_inputMovement.x, 0, _inputMovement.y) * _walkMultiplier;
+        _currentMovement = new Vector3(_inputMovement.x, 0, _inputMovement.y);
         _isPlayerMoving = _currentMovement.x != 0 || _currentMovement.z != 0;
     }
 
@@ -133,12 +142,6 @@ public class PlayerController : MonoBehaviour
     public void OnRun(InputAction.CallbackContext context)
     {
         _isPlayerRunning = context.ReadValueAsButton();
-
-        if (_isPlayerRunning)
-        {
-            _currentMovement = new Vector3(_inputMovement.x, 0, _inputMovement.y) * _runMultiplier;
-            _isPlayerMoving = _currentMovement.x != 0 || _currentMovement.z != 0;
-        }
     }
 
     // Receives event context from the Unity Input System and triggers attack animation

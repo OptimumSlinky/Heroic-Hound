@@ -603,7 +603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkMultiplier: 2
-  _runMultiplier: 6
+  _runMultiplier: 4
   _rotationMultiplier: 6
 --- !u!143 &1560746939
 CharacterController:
