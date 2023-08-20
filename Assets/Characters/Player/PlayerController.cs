@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 /// <summary>
 /// Primary control class to handle player inputs and move/animate the player character
@@ -14,14 +15,15 @@ public class PlayerController : MonoBehaviour
     private Vector3 _currentMovement;
     private Vector2 _inputMovement;
 
-    [SerializeField] private float _walkMultiplier = 1.5f;
-    [SerializeField] private float _runMultiplier = 3.0f;
-    [SerializeField] private float _rotationMultiplier = 5.0f;
+    [SerializeField] private float _walkMultiplier;
+    [SerializeField] private float _runMultiplier;
+    [SerializeField] private float _blockModifier;
+    [SerializeField] private float _rotationMultiplier;
 
     // Bools for tracking current player state
-    private bool _isPlayerMoving;
-    private bool _isPlayerRunning;
-    private bool _isPlayerBlocking;
+    private bool _playerIsMoving;
+    private bool _playerIsRunning;
+    private bool _playerIsBlocking;
 
     // Integers for animator hashing
     private int _walkingHash;
@@ -65,15 +67,22 @@ public class PlayerController : MonoBehaviour
         OnRotate();
         AnimatePlayer();
 
-        if (_isPlayerRunning)
+        if (_playerIsRunning)
         {
             playerController.Move((_currentMovement * _runMultiplier) * Time.deltaTime);
+        }
+
+        if (_playerIsBlocking)
+        {
+            playerController.Move((_currentMovement * _blockModifier) * Time.deltaTime);
         }
 
         else
         {
             playerController.Move((_currentMovement * _walkMultiplier) * Time.deltaTime);
         }
+
+        HandleGravity();
     }
 
     // Sets up hashes for animator optimization
@@ -92,22 +101,22 @@ public class PlayerController : MonoBehaviour
         bool playerWalking = animator.GetBool(_walkingHash);
         bool playerRunning = animator.GetBool(_runningHash);
 
-        if (_isPlayerMoving && !playerWalking)
+        if (_playerIsMoving && !playerWalking)
         {
             animator.SetBool(_walkingHash, true);
         }
 
-        if (!_isPlayerMoving && playerWalking)
+        if (!_playerIsMoving && playerWalking)
         {
             animator.SetBool(_walkingHash, false);
         }
 
-        if ((_isPlayerMoving && _isPlayerRunning) && !playerRunning)
+        if ((_playerIsMoving && _playerIsRunning) && !playerRunning)
         {
             animator.SetBool(_runningHash, true);
         }
 
-        if ((!_isPlayerMoving && !_isPlayerRunning) && playerRunning)
+        if ((!_playerIsMoving && !_playerIsRunning) && playerRunning)
         {
             animator.SetBool(_runningHash, false);
         }
@@ -118,7 +127,7 @@ public class PlayerController : MonoBehaviour
     {
         _inputMovement = value.ReadValue<Vector2>();
         _currentMovement = new Vector3(_inputMovement.x, 0, _inputMovement.y);
-        _isPlayerMoving = _currentMovement.x != 0 || _currentMovement.z != 0;
+        _playerIsMoving = _currentMovement.x != 0 || _currentMovement.z != 0;
     }
 
     // Handles rotation of the player character
@@ -131,7 +140,7 @@ public class PlayerController : MonoBehaviour
         Vector3 turnDirection = new Vector3(_currentMovement.x, 0, _currentMovement.z);
 
         // Verify movement has been pressed and rotate the character towards that new direction
-        if (_isPlayerMoving)
+        if (_playerIsMoving)
         {
             Quaternion endRotation = Quaternion.LookRotation(turnDirection);
             transform.rotation = Quaternion.Slerp(currentRotation, endRotation, _rotationMultiplier * Time.deltaTime);
@@ -141,7 +150,7 @@ public class PlayerController : MonoBehaviour
     // Receives event context from the Unity Input System and engages the run modifier
     public void OnRun(InputAction.CallbackContext context)
     {
-        _isPlayerRunning = context.ReadValueAsButton();
+        _playerIsRunning = context.ReadValueAsButton();
     }
 
     // Receives event context from the Unity Input System and triggers attack animation
@@ -156,16 +165,33 @@ public class PlayerController : MonoBehaviour
     // Receives event context from the Unity Input System and triggers blocking animation/state
     public void OnBlock(InputAction.CallbackContext context)
     {
-        _isPlayerBlocking = animator.GetBool(_blockHash);
+        _playerIsBlocking = animator.GetBool(_blockHash);
 
-        if (context.started && !_isPlayerBlocking)
+        if (context.started && !_playerIsBlocking)
         {
             animator.SetBool(_blockHash, true);
         }
 
-        else if (context.canceled && _isPlayerBlocking)
+        else if (context.canceled && _playerIsBlocking)
         {
             animator.SetBool(_blockHash, false);
+            _playerIsBlocking = false;
+        }
+    }
+
+    // Make sure the player doesn't fly
+    private void HandleGravity()
+    {
+        if (playerController.isGrounded)
+        {
+            float groundedGravity = -0.05f;
+            _currentMovement.y = groundedGravity;
+        }
+
+        else
+        {
+            float actualGravity = -9.8f;
+            _currentMovement.y = actualGravity;
         }
     }
 
