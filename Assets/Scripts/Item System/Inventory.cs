@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,16 +14,16 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Item newItem)
     {
-        if (_inventory.Count < _capacity) 
+        if (_inventory.Count < _capacity)
         {
             _inventory.Add(newItem);
         }
     }
-    
-    public void RemoveItem(Item item) 
-    { 
-        if (_inventory.Count > 0) 
-        { 
+
+    public void RemoveItem(Item item)
+    {
+        if (_inventory.Count > 0)
+        {
             _inventory.Remove(item);
         }
     }
