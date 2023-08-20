@@ -5,7 +5,9 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public static Inventory instance;
+    private int _capacity = 4;
     [SerializeField] private List<Item> _inventory = new List<Item>();
+
 
     private void Awake()
     {
@@ -14,7 +16,10 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Item newItem)
     {
-        _inventory.Add(newItem);
+        if (_inventory.Count < _capacity) 
+        {
+            _inventory.Add(newItem);
+        }
     }
     
     public void RemoveItem(Item item) 

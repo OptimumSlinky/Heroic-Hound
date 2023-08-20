@@ -10,7 +10,7 @@ public class Item : Interactable
 
     private void PickUpItem()
     {
-        Debug.Log("Picked up" + transform.name);
+        Debug.Log("Picked up " + transform.name);
 
         // Add item to inventory
         Inventory.instance.AddItem(this);
