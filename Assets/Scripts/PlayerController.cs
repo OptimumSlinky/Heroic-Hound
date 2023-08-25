@@ -64,31 +64,20 @@ public class PlayerController : MonoBehaviour
         input.PlayerControls.Interact.started += OnInteract;
     }
 
-    // Update player state
+    /// <summary>
+    /// Update player state
+    /// </summary>
     void Update()
     {
         OnRotate();
         AnimatePlayer();
-
-        if (_playerIsRunning)
-        {
-            playerController.Move((_currentMovement * _runMultiplier) * Time.deltaTime);
-        }
-
-        if (_playerIsBlocking)
-        {
-            playerController.Move((_currentMovement * _blockModifier) * Time.deltaTime);
-        }
-
-        else
-        {
-            playerController.Move((_currentMovement * _walkMultiplier) * Time.deltaTime);
-        }
-
+        MovePlayer();
         HandleGravity();
     }
 
-    // Sets up hashes for animator optimization
+    /// <summary>
+    /// Sets up hashes for animator optimization
+    /// </summary>
     void SetUpAnimatorFlags()
     {
         animator = GetComponent<Animator>();
@@ -98,7 +87,9 @@ public class PlayerController : MonoBehaviour
         _blockHash = Animator.StringToHash("block");
     }
 
-    // Gets the current state of the Animator parameters and animates the player
+    /// <summary>
+    /// Gets the current state of the Animator parameters and animates the player
+    /// </summary>
     void AnimatePlayer()
     {
         bool playerWalking = animator.GetBool(_walkingHash);
@@ -125,7 +116,31 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Receives event context from the Unity Input System and moves the player
+    /// <summary>
+    /// Encapsulates the player movement and velocity logic
+    /// </summary>
+    void MovePlayer()
+    {
+        if (_playerIsRunning)
+        {
+            playerController.Move((_currentMovement * _runMultiplier) * Time.deltaTime);
+        }
+
+        if (_playerIsBlocking)
+        {
+            playerController.Move((_currentMovement * _blockModifier) * Time.deltaTime);
+        }
+
+        else
+        {
+            playerController.Move((_currentMovement * _walkMultiplier) * Time.deltaTime);
+        }
+    }
+
+    /// <summary>
+    /// Receives event context from the Unity Input System and moves the player
+    /// </summary>
+    /// <param name="value"></param>
     public void OnMovement(InputAction.CallbackContext value)
     {
         _inputMovement = value.ReadValue<Vector2>();
@@ -133,7 +148,9 @@ public class PlayerController : MonoBehaviour
         _playerIsMoving = _currentMovement.x != 0 || _currentMovement.z != 0;
     }
 
-    // Handles rotation of the player character
+    /// <summary>
+    /// Handles rotation of the player character
+    /// </summary>
     void OnRotate()
     {
         // Get current player rotation
@@ -150,13 +167,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Receives event context from the Unity Input System and engages the run modifier
+    /// <summary>
+    /// Receives event context from the Unity Input System and engages the run modifier
+    /// </summary>
+    /// <param name="context"></param>
     public void OnRun(InputAction.CallbackContext context)
     {
         _playerIsRunning = context.ReadValueAsButton();
     }
 
-    // Receives event context from the Unity Input System and triggers attack animation
+    /// <summary>
+    /// Receives event context from the Unity Input System and triggers attack animation
+    /// </summary>
+    /// <param name="context"></param>
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -165,7 +188,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Receives event context from the Unity Input System and triggers blocking animation/state
+    /// <summary>
+    /// Receives event context from the Unity Input System and triggers blocking animation/state
+    /// </summary>
+    /// <param name="context"></param>
     public void OnBlock(InputAction.CallbackContext context)
     {
         _playerIsBlocking = animator.GetBool(_blockHash);
@@ -182,7 +208,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Receives event context from the Unity Input System and triggers attack animation
+    /// <summary>
+    /// Receives event context from the Unity Input System and triggers attack animation
+    /// </summary>
+    /// <param name="context"></param>
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -191,7 +220,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Make sure the player doesn't fly
+    /// <summary>
+    /// Make sure the player doesn't fly
+    /// </summary>
     private void HandleGravity()
     {
         if (playerController.isGrounded)
